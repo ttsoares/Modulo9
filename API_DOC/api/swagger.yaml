@@ -1,0 +1,487 @@
+---
+swagger: "2.0"
+info:
+  description: "Scrap Messages"
+  version: "1.0.0"
+  title: "Learning API documentation"
+  contact:
+    email: "thomas.tschoepke@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/ttsoares/scrapmessages/1.0.0"
+tags:
+- name: "users"
+  description: "Operations available to regular users"
+- name: "admin"
+  description: "Only admin user access"
+schemes:
+- "https"
+paths:
+  /message/:userid:
+    post:
+      tags:
+      - "users"
+      summary: "adds a new message for an user"
+      description: "Adds a message to the system"
+      operationId: "addMessage"
+      consumes:
+      - "application/json"
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "Pass user ID to add the message"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "messageItem"
+        description: "Message to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/MessageItem"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "JSON of the new message"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MessageItem"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+  /messages/:userid:
+    get:
+      tags:
+      - "users"
+      summary: "Get all messages from one user"
+      description: "By passing in a valid user ID one gets back all the messages of\
+        \ this particular user."
+      operationId: "searchMessages"
+      consumes:
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "Pass user ID to select messages"
+        required: true
+        type: "string"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "Array of object type Message or empty"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MessageItem"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+  /message/:messageid:
+    get:
+      tags:
+      - "users"
+      summary: "Get one message from an user"
+      description: "By passing in a valid message ID gets back the specific message."
+      operationId: "searchMessage"
+      consumes:
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "Pass message ID to select a message"
+        required: true
+        type: "string"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "One objects type Message"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MessageItem"
+        "400":
+          description: "Bad input parameter"
+        "404":
+          description: "Message not found"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+    put:
+      tags:
+      - "users"
+      summary: "Updatea message"
+      description: "Update data in a message"
+      operationId: "updateMessage"
+      consumes:
+      - "application/json"
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "pass user ID to select messages"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "messageItem"
+        description: "message to update"
+        required: true
+        schema:
+          $ref: "#/definitions/MessageItem"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "JSON of the message"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MessageItem"
+        "400":
+          description: "Invalid input, object invalid"
+        "404":
+          description: "Message not found"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+    delete:
+      tags:
+      - "users"
+      summary: "remove a message"
+      description: "Delete a message"
+      operationId: "deleteMessage"
+      consumes:
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "messageItem"
+        in: "query"
+        description: "message to remove"
+        required: true
+        type: "string"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "JSON of the removed message"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MessageItem"
+        "400":
+          description: "Invalid input, object invalid"
+        "404":
+          description: "Message not found"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+  /user/:userid:
+    get:
+      tags:
+      - "users"
+      summary: "Get one user for edition"
+      description: "By passing in a valid user ID save modifyed user data."
+      operationId: "searchUser"
+      consumes:
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "Pass user ID to select an user"
+        required: true
+        type: "string"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "Search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserItem"
+        "400":
+          description: "Bad input parameter"
+        "404":
+          description: "User not found"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+    put:
+      tags:
+      - "admin"
+      summary: "Record edited user data"
+      description: "Update data in an user record"
+      operationId: "useruseridPUT"
+      consumes:
+      - "application/json"
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "searchString"
+        in: "query"
+        description: "Update user data"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "UserItem"
+        description: "User to update"
+        required: true
+        schema:
+          $ref: "#/definitions/UserItem"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "JSON of the added user object"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserItem"
+        "400":
+          description: "invalid input, object invalid"
+        "404":
+          description: "User not found"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Admin"
+    delete:
+      tags:
+      - "admin"
+      summary: "remove an user"
+      description: "Delete an user"
+      operationId: "deleteUser"
+      consumes:
+      - "UUID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userItem"
+        in: "query"
+        description: "user to remove"
+        required: true
+        type: "string"
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "JSON of the removed user object"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserItem"
+        "400":
+          description: "invalid input, object invalid"
+        "404":
+          description: "User not found"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Admin"
+  /user/store:
+    post:
+      tags:
+      - "users"
+      summary: "Adds a new user"
+      description: "Adds an user to the system"
+      operationId: "adduser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "userItem"
+        description: "user to add"
+        required: true
+        schema:
+          $ref: "#/definitions/UserItem"
+      responses:
+        "200":
+          description: "JSON of the user"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserItem"
+        "400":
+          description: "Invalid input, object invalid"
+        "409":
+          description: "Unauthorized token"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+  /login:
+    post:
+      tags:
+      - "users"
+      summary: "Authenticate an user"
+      description: "Test user credentials"
+      operationId: "authUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "userItem"
+        description: "test username and passowrd"
+        required: true
+        schema:
+          $ref: "#/definitions/AuthItem"
+      responses:
+        "200":
+          description: "JWT token"
+        "401":
+          description: "User not authorized"
+        "404":
+          description: "User not found"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Users"
+  /users:
+    get:
+      tags:
+      - "admin"
+      summary: "get all users"
+      description: "Retrieve a list of all users - names and passwords."
+      operationId: "searchUsers"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "JWT token"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserItem"
+        "400":
+          description: "bad input parameter"
+        "500":
+          description: "INTERNAL_SERVER_ERROR"
+      x-swagger-router-controller: "Admin"
+definitions:
+  MessageItem:
+    type: "object"
+    required:
+    - "description"
+    - "uid"
+    - "user_id"
+    properties:
+      uid:
+        type: "string"
+        format: "uuid"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      description:
+        type: "string"
+        example: "Message description"
+      'details:':
+        type: "string"
+        example: "Message details"
+      user_id:
+        type: "string"
+        format: "uuid"
+        example: "5881acad-d96f-4d2b-a0fb-c6db09fc9828"
+    example:
+      uid: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      user_id: "5881acad-d96f-4d2b-a0fb-c6db09fc9828"
+      description: "Message description"
+      'details:': "Message details"
+  UserItem:
+    type: "object"
+    required:
+    - "name"
+    - "password"
+    - "uid"
+    properties:
+      uid:
+        type: "string"
+        format: "uuid"
+        example: "70c30f64-f029-4664-ad82-d333a7591e91"
+      name:
+        type: "string"
+        example: "Maria Joaquina"
+      password:
+        type: "string"
+        format: "hash"
+        example: "c2ca5a172802a99179473284631333cb"
+    example:
+      uid: "70c30f64-f029-4664-ad82-d333a7591e91"
+      password: "c2ca5a172802a99179473284631333cb"
+      name: "Maria Joaquina"
+  AuthItem:
+    type: "object"
+    required:
+    - "name"
+    - "password"
+    properties:
+      name:
+        type: "string"
+        example: "userone"
+      password:
+        type: "string"
+        format: "hash"
+        example: "c2ca5a172802a99179473284631333cb"
+    example:
+      password: "c2ca5a172802a99179473284631333cb"
+      name: "userone"

@@ -1,0 +1,27 @@
+.main_login {
+  width: 100vw;
+  height: 100vh;
+  margin:0;
+  background-image: url(../imgs/fundo.png);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.externa {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+}
+
+.internaLogin {
+  width: 40%;
+  height: 30%;
+}
+
+.registre {
+  color:blue;
+  font-weight: 800;
+  cursor: pointer;
+}

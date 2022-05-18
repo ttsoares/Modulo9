@@ -1,0 +1,25 @@
+.main_users {
+  width: 100vw;
+  height: 100vh;
+  margin:0;
+  background-image: url(../imgs/admin.jpg);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+span {
+  color: red;
+}
+
+.userTH, .userTD {
+  font-size: 20px;
+  font-weight: bold;
+  color: yellow;
+  text-shadow: 2px 2px 8px #FF0000;
+}
+
+tr .userTH {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+

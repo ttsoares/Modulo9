@@ -1,0 +1,18 @@
+$modal-content-bg: rgba(35, 119, 145, 0.6);
+$modal-content-color: white;
+$modal-backdrop-opacity: 0.7;
+$blue:    #104eac;
+
+@import '../../node_modules/bootstrap/scss/_functions';
+@import '../../node_modules/bootstrap/scss/_variables';
+
+$custom-theme-colors: (
+        "altlight": rgb(89, 118, 160),
+        "altdark": hsl(216, 67%, 22%)
+);
+
+$theme-colors: map-merge($custom-theme-colors, $theme-colors);
+
+@import '../../node_modules/bootstrap/scss/bootstrap';
+
+

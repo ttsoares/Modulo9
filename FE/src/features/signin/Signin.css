@@ -1,0 +1,15 @@
+.main_signin {
+  width: 100vw;
+  height: 100vh;
+  margin:0;
+  background-image: url(../imgs/newuser.png);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.btnBack {
+  position: fixed;
+  top:1%;
+  right: 2%;
+}

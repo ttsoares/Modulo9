@@ -1,0 +1,27 @@
+.main_messages {
+  width: 100vw;
+  height: 100vh;
+  margin:0;
+  background-image: url(../imgs/messages.png);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+span {
+  color: darkcyan;
+}
+
+.interna {
+  width: 90%;
+  height: 30%;
+}
+
+th, td {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+tr th {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
