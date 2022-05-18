@@ -40,13 +40,13 @@ describe("GET /user/userid", () => {
     jest.setTimeout(5000);
   });
 
-  test("Deve retornar 200 com o usuário buscado", async () => {
+  it("Deve retornar 200 com o usuário buscado", async () => {
     const user = await makeUserDB();
 
     await request(server)
       .get(`/user/${user.uid}`)
       .send()
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken)
       .expect(200)
       .expect(async (res) => {
         expect(res.body.uid).toBeTruthy();
@@ -55,24 +55,24 @@ describe("GET /user/userid", () => {
       });
   });
 
-  test("Deve retornar 404 com erro: Usuário não encontrado !", async () => {
+  it("Deve retornar 404 com erro: Usuário não encontrado !", async () => {
     await request(server)
       .get("/user/b696241d-78b5-4ab6-9f18-504d44f68cbd")
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken)
       .expect(404), {
         error: "INVALID_DATA",
         message: "Usuário não encontrado !"
       }
   });
 
-  test("Deve retornar 500 com Internal Server Error", async () => {
+  it("Deve retornar 500 com Internal Server Error", async () => {
     jest
       .spyOn(UserRepository.prototype, "findById")
       .mockRejectedValue(new Error("any_erro"));
 
     await request(server)
       .get("/user/b696241d-78b5-4ab6-9f18-504d44f68cbd")
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken)
       .expect(500, {
       error: "INTERNAL_SERVER_ERROR",
       message: "any_erro",

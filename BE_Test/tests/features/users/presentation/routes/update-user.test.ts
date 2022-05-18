@@ -40,10 +40,8 @@ describe("PUT /user/userid", () => {
     jest.setTimeout(5000);
   });
 
-  test("Deve retornar 200 com o usuário atualizado", async () => {
-
+  it("Deve retornar 200 com o usuário atualizado", async () => {
     const user = await makeUserDB();
-    //userID = user.uid;
 
     await request(server)
       .put(`/user/${user.uid}`)
@@ -51,6 +49,7 @@ describe("PUT /user/userid", () => {
         name: "modificado",
         password: "654321"
       })
+      .set('Authorization', admToken)
       .expect(200)
       .expect(async (res) => {
         expect(res.body.uid).toBeTruthy();
@@ -59,8 +58,7 @@ describe("PUT /user/userid", () => {
       });
   });
 
-  test("Deve retornar 400 com erro senha vazia", async () => {
-
+  it("Deve retornar 400 com erro senha vazia", async () => {
     jest
       .spyOn(UserRepository.prototype, "findByName")
       .mockRejectedValue(new Error("any_error"));
@@ -71,26 +69,28 @@ describe("PUT /user/userid", () => {
         name: "qquer",
         password: ""
       })
+      .set('Authorization', admToken)
       .expect(400), {
           error: "any_error",
           message: "Senha vazia !"
       };
   });
 
-  test("Deve retornar 404 com erro: Usuário não encontrado !", async () => {
+  it("Deve retornar 404 com erro: Usuário não encontrado !", async () => {
     await request(server)
       .put("/user/b696241d-78b5-4ab6-9f18-504d44f68cbd")
       .send({
         name: "qquer",
         password: "123456"
       })
+      .set('Authorization', admToken)
       .expect(404), {
         error: "INVALID_DATA",
         message: "Usuário não encontrado !"
       }
   });
 
-  test("Deve retornar 500 com Internal Server Error", async () => {
+  it("Deve retornar 500 com Internal Server Error", async () => {
     jest
       .spyOn(UserRepository.prototype, "updateUser")
       .mockRejectedValue(new Error("any_erro"));
@@ -101,6 +101,7 @@ describe("PUT /user/userid", () => {
         name: "qquer",
         password: "123456"
       })
+      .set('Authorization', admToken)
       .expect(500, {
       error: "INTERNAL_SERVER_ERROR",
       message: "any_erro",

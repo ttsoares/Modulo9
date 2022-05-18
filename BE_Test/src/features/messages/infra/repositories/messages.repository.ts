@@ -1,7 +1,5 @@
 import { MessageEntity } from
 "../../../../core/infra/data/database/entities/MessageEntitie";
-import { UserEntity } from
-"../../../../core/infra/data/database/entities/UserEntitie";
 
 import { Message } from "../../domain/models/message";
 

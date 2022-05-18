@@ -44,7 +44,7 @@ export const testAdmToken = (token: string): Boolean => {
   return retorno
 } 
 
-export const makeAdmToken = (): String => {
+export const makeAdmToken = (): string => {
   return jwt.sign(
     {name: 'admin'}, "s3gr3d0DO4dm1n", {expiresIn: '1m'}
   )

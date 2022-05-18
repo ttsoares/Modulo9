@@ -39,19 +39,18 @@ describe("GET /users", () => {
     jest.setTimeout(5000);
   });
 
-  //Each test stats with an empty DB
-  test("Deve retornar 404 com erro: Nenhum usuário.", async () => {
+  //Each it stats with an empty DB
+  it("Deve retornar 404 com erro: Nenhum usuário.", async () => {
     await request(server)
       .get("/users")
-      //.set('Authorization', `Bearer ${token}`);
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken)
       .expect(404), {
         error: "DATA_NOT_FOUND",
         message: "Nenhum usuário."
       }
   });
 
-  test("Deve retornar 200 com a lista de usuários", async () => {
+  it("Deve retornar 200 com a lista de usuários", async () => {
 
     const user1 = await makeUserDB("user1", "password1");
     const user2 = await makeUserDB("user2", "password2");
@@ -59,7 +58,7 @@ describe("GET /users", () => {
     await request(server)
       .get("/users")
       .send()
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken)
       .expect(200)
       .expect(async (res) => {
         expect(res.body).toHaveLength(2);
@@ -76,13 +75,14 @@ describe("GET /users", () => {
       });
   });
 
-  test("Deve retornar 500 com Internal Server Error", async () => {
+  it("Deve retornar 500 com Internal Server Error", async () => {
     jest
       .spyOn(UserRepository.prototype, "getAllUsers")
       .mockRejectedValue(new Error("No default engine was specified and no extension was provided."));
 
     await request(server)
       .get("/users")
+      .set('Authorization', admToken)
       .expect(500, {
       error: "INTERNAL_SERVER_ERROR",
       message: "No default engine was specified and no extension was provided.",

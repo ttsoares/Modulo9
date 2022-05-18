@@ -4,6 +4,7 @@ import App from "../../../../../src/core/presentation/app";
 import Database from "../../../../../src/core/infra/data/connections/database";
 import MessageRoutes from "../../../../../src/features/messages/presentation/routes/routes";
 import { MessageEntity } from "../../../../../src/core/infra/data/database/entities/MessageEntitie";
+import { MessageRepository } from "../../../../../src/features/messages/infra/repositories/messages.repository"
 import { v4 as uuid } from "uuid";
 import { UserEntity} from "../../../../../src/core/infra/data/database/entities/UserEntitie"
 import jwt from 'jsonwebtoken'; 
@@ -16,7 +17,6 @@ const makeUserDB = async (): Promise<UserEntity> => {
   }).save();
 };
 
-// Can be a Synchronous opperation ?
 const makeToken = (user: UserEntity): string => {
   return jwt.sign(
     {id:user.uid, name: user.name},
@@ -50,7 +50,7 @@ describe("GET /messages", () => {
     jest.setTimeout(5000);
   });
 
-  test("Deve retornar 200, do PGSQL, ao buscar uma lista com 2 mensagens", async () => {
+  it("Deve retornar 200, do PGSQL, ao buscar uma lista com 2 mensagens", async () => {
 
     const user = await makeUserDB();
     const token = makeToken(user);
@@ -89,7 +89,7 @@ describe("GET /messages", () => {
     });
   });
 
-  test("Deve retornar 404 com a mensagem Data not found", async () => {
+  it("Deve retornar 404 com a mensagem Data not found", async () => {
     const user = await makeUserDB();
     const token = makeToken(user);
     
@@ -111,6 +111,26 @@ describe("GET /messages", () => {
         expect(res.body.message).toBe("Token Invalido")
         console.log(res.body.message)
       });
+  });
+
+  it("Deve retornar 500 com Internal Server Error", async () => {
+    jest
+      .spyOn(MessageRepository.prototype, "update")
+      .mockRejectedValue(new Error("any_erro"));
+
+    const user = await makeUserDB();
+    const token = makeToken(user);
+    await request(server)
+      .put("/message/b696241d-78b5-4ab6-9f18-504d44f68cbd")
+      .send({
+        description: "Descrcao...",
+        details: "Detalhes...."
+      })
+      .set('Authorization', token)
+      .expect(500, {
+      error: "INTERNAL_SERVER_ERROR",
+      message: "any_erro",
+    });
   });
 
 });

@@ -37,7 +37,7 @@ describe("POST /user/store", () => {
     jest.setTimeout(5000);
   });
 
-  test("Deve retornar 200 com uma mensagem criada com todas as informações", async () => {
+  it("Deve retornar 200 com uma mensagem criada com todas as informações", async () => {
     await request(server)
       .post("/user/store")
       .send({ name: "user1", password: "password1"})
@@ -49,7 +49,7 @@ describe("POST /user/store", () => {
       });
   });
 
-  test("Deve retornar 400 com erro: Usuário já existe !", async () => {
+  it("Deve retornar 400 com erro: Usuário já existe !", async () => {
     await makeUserDB();
 
     await request(server)
@@ -61,7 +61,7 @@ describe("POST /user/store", () => {
       }
   });
 
-  test("Deve retornar 500 com Internal Server Error", async () => {
+  it("Deve retornar 500 com Internal Server Error", async () => {
     jest
       .spyOn(UserRepository.prototype, "createUser")
       .mockRejectedValue(new Error("any_erro"));

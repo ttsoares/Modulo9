@@ -40,12 +40,13 @@ describe("DELETE /user/userid", () => {
     jest.setTimeout(5000);
   });
 
-  test("Deve retornar 200 com o usuario removido", async () => {
+  it("Deve retornar 200 com o usuario removido", async () => {
     const user = await makeUserDB();
+
     await request(server)
       .delete(`/user/${user.uid}`)
       .send()
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken) 
       .expect(200)
       .expect(async (res) => {
         expect(res.body.uid).toBeTruthy();
@@ -54,50 +55,18 @@ describe("DELETE /user/userid", () => {
       });
   });
 
-  // it('should respond with a 200 status code', async () => {
-  //   const user = await makeUserDB();
-  //   await request(server)
-  //     .delete(`/user/${user.uid}`)
-  //     .send()
-  //     .set('Authorization', `Bearer ${admToken}`)  
-  //     .expect(200)
-  //     .expect(async (res) => {
-  //       expect(res.body.uid).toBeTruthy();
-  //       expect(res.body.name).toBe("user1");
-  //       expect(res.body.password).toBe("password1");
-  //     });
-  // });
-
-/*
-request(app)
-.set('Authorization', 'abc123')     NÃO 
-.setHeader('Authorization', token)    NÃO 
-.set('Authorization', `Bearer ${token}`);
-
-      .post('/api/categories')
-      .send(category)
-      .setHeader('Authorization', token)
-      .end((err, res) => {
-        const newCategory = res.body;
-        expect(res.status).to.be.equal(200);
-        expect(newCategory).to.be.equal(category);
-        done();
-      });
-*/
-
-
-  test("Deve retornar 400 com erro: Usuário não encontrado !", async () => {
+  it("Deve retornar 400 com erro: Usuário não encontrado !", async () => {
     await request(server)
       .delete("/user/b696241d-78b5-4ab6-9f18-504d44f68cbd")
       .send()
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken)
       .expect(400), {
         error: "INVALID_DATA",
         message: "Usuário não encontrado !"
       }
   });
 
-  test("Deve retornar 500 com Internal Server Error", async () => {
+  it("Deve retornar 500 com Internal Server Error", async () => {
     jest
       .spyOn(UserRepository.prototype, "deleteUser")
       .mockRejectedValue(new Error("any_erro"));
@@ -105,7 +74,7 @@ request(app)
     await request(server)
       .delete("/user/b696241d-78b5-4ab6-9f18-504d44f68cbd")
       .send()
-      .set({Headers: {'Authorization': admToken}})
+      .set('Authorization', admToken) 
       .expect(500, {
       error: "INTERNAL_SERVER_ERROR",
       message: "any_erro",

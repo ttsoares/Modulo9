@@ -13,9 +13,9 @@ export class GetOneUserController implements Controller{
 		const admToken = String(req.headers.authorization)
 		console.log("Token: ", admToken);
 
-		// if (!testAdmToken(admToken)) {
-		// 	return res.status(409).send("Nao autorizado");
-		// }
+		if (!testAdmToken(admToken)) {
+			return res.status(409).send("Nao autorizado");
+		}
 
 		const repository = new UserRepository();
     const user  = await repository.findById(user_id);
