@@ -6,9 +6,7 @@ import { UserRepository } from "../../infra/repositories/user.repository"
 export class GetAllUsersController implements Controller{
 	async handle(req: Request, res: Response): Promise<any> {
 		try {
-
 			const admToken = String(req.headers.authorization)
-			console.log("Token: ", admToken);
 
 			if (!testAdmToken(admToken)) {
 				return res.status(409).send("Nao autorizado");

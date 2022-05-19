@@ -8,9 +8,7 @@ export class UpdateUserController implements Controller{
 		try {
 			const user_id = req.params.userid;
 			const { name, password }: { name: string; password: string } = req.body;
-
 			const admToken = String(req.headers.authorization)
-			console.log("Token: ", admToken);
 
 			if (!testAdmToken(admToken)) {
 				return res.status(409).send("Nao autorizado");

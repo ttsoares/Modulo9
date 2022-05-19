@@ -7,9 +7,7 @@ export class GetOneMessageController implements Controller{
 	async handle(req: Request, res: Response): Promise<any> {
 		try {
 			const message_id = req.params.messageid;
-
 			const token = String(req.headers.authorization)
-			console.log("Token: ", token);
 
 			if (!authorized(token)) { // Test the token
 				return res.status(409).send({message: "Token Invalido"});
