@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate} from 'react-router-dom';
-//import { useDispatch, useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import "./Messages.css";
 import {Modal, Button } from 'react-bootstrap';
 import api from '../../services/api';
 import { logout } from '../login/loginSlice';
-//import { all, rst, add, del, upd, selectMessages, thunkGetMessages } from './messagesSlice'
 import { all, rst, add, del, upd } from './messagesSlice'
-import TableMessages from './table'
+import TableMessages from './table';
+import loading from '../imgs/loading.jpg';
 
 const Messages = (props) => {
-
-  //const reduxMessages = useSelector(selectMessages);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,6 +17,7 @@ const Messages = (props) => {
   const { state } = useLocation(); //data from login
   const userID = state.uid
   const userName = state.name
+  const [clock, setClock] = useState(true);
 
   const initialStateOneMessage = {
     description: "",
@@ -42,7 +40,9 @@ const Messages = (props) => {
   
   //--------------------------------- get all messages form user 'userID'
   async function getAllMessages(userID) {
+    setClock(true);
     const messagesList = await api.getMessages(userID)
+    setClock(false);
     setCompMessages(messagesList);    // component list of messages
     dispatch(all(messagesList));
   }
@@ -58,7 +58,9 @@ const Messages = (props) => {
     event.preventDefault();
     let newMessage={}
     try {
+      setClock(true);
       newMessage = await api.saveMessage(message, userID);
+      setClock(false);
     } catch (error) {
       console.log('error', error);
       throw(error);
@@ -82,7 +84,9 @@ const Messages = (props) => {
     event.preventDefault();
     setVisible(false);
     try {
+      setClock(true);
       await api.updtMessage(message);
+      setClock(false);
     } catch (error) {
       console.log('error', error);
       throw(error);
@@ -97,7 +101,9 @@ const Messages = (props) => {
   //-------------------------------- remove message
   async function delMessage(msgID) {
     try {
+      setClock(true);
       await api.delMessage(msgID);
+      setClock(false);
       dispatch(del(msgID));  // Redux list of messages
       setMudou(mudou+1);
     } catch (err){
@@ -168,7 +174,10 @@ const Messages = (props) => {
           </div>
         )
       }
-      
+      {clock ? 
+        <div class="position-absolute"> 
+        <img class="clock" src={loading} alt="Loading"/></div>: null
+      }
     </div>
 {/* ******************edit message ************************ */}
       <Modal show={visible}  centered size="lg" onHide={() => setVisible(false)} >

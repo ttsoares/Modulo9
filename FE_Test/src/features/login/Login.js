@@ -8,6 +8,7 @@ import { login } from './loginSlice';
 import md5 from 'md5';
 import {Modal, Button } from 'react-bootstrap';
 import jwt_decode from "jwt-decode";
+import loading from '../imgs/loading.jpg';
 
 import "./index.css";
 
@@ -22,9 +23,10 @@ const Login = (props) => {
   const initialState = {
     name: "",
     password: ""
-  }
-  const [user, setUser] = useState(initialState)
-  const [error, setError] = useState(false)
+  };
+  const [user, setUser] = useState(initialState);
+  const [error, setError] = useState(false);
+  const [clock, setClock] = useState(false);
 
   //--------------------------------
   function handleInput(event) {
@@ -43,7 +45,9 @@ const Login = (props) => {
       let replyToken
       // Send to BE 'admin'  and the entered password  
       try {
+        setClock(true);
         replyToken = await api.testAdmin('admin', user.password) 
+        setClock(false);
       } catch (error) {
         console.log('Ocorreu algum erro', error)
       }
@@ -66,13 +70,14 @@ const Login = (props) => {
     let responseBE
     const cryptPassword = md5(`${user.name}${user.password}`)
     try {
+      setClock(true);
       responseBE = await api.login({
         name: user.name,
         password: cryptPassword
-      })
+      });
+      setClock(false);
     } catch (error) {
       console.log('Ocorreu algum erro', error)
-      //throw (error)
     }
 
     const { token } = responseBE
@@ -83,7 +88,7 @@ const Login = (props) => {
       dispatch(login({
         name, id
       }));
-      props.respLogin('user') // to App decidade the route to use
+      props.respLogin('user') // to App decide the route to use
       navigate('Messages', { state: {uid: id, name: name}})
 
       return
@@ -139,14 +144,19 @@ const Login = (props) => {
           </div>
         </form>
 
-        <footer>
+        <footer data-testid="callReg">
           <div className="px-0 mt-2 container d-flex">
             <p className="pe-2 text-secondary">Não tem uma conta ?</p>
             <a className='registre' onClick={() => {navigate('Signin')}}>Registre-se</a>
           </div>
         </footer>
       </div>
+    {clock ? 
+        <div class="position-absolute"> 
+        <img class="clock" src={loading} alt="Loading"/></div>: null
+      }
     </section>
+
 {/* ---------------------------------------------------------------------- */}
 
     <Modal show={error}  centered size="lg" onHide={() => setError(false)} >
@@ -168,4 +178,4 @@ const Login = (props) => {
   </div>
   )
 }
-export default Login
+export default Login;

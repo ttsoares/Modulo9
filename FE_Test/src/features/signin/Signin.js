@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './Signin.css';
 import api from '../../services/api';
 import md5 from 'md5';
+import loading from '../imgs/loading.jpg';
 
 //===========================================
 function Signin() {
@@ -11,6 +12,7 @@ function Signin() {
   const [visSuccess, setvisSuccess] = useState(false);
   const [visErrPass, setvisErrPass] = useState(false);
   const [visErrLett, setvisErrLett] = useState(false);
+  const [clock, setClock] = useState(false);
 
   const navigate = useNavigate();
 
@@ -61,7 +63,9 @@ function Signin() {
     const encryPassword = md5(`${user.name}${user.password1}`)
 
     try {
+      setClock(true);
       await api.addUser(user.name, encryPassword);
+      setClock(false);
       setVisible(false)
       setvisSuccess(true)
     } catch (error){
@@ -111,7 +115,7 @@ function Signin() {
                 />
                 <div className="d-grid mt-3">
                   <button
-                     disabled={!user.name || !user.password1 
+                    disabled={!user.name || !user.password1 
                       || user.password1 !== user.password2}
                     id="myBtn"
                     className="btn btn-primary rounded-pill"
@@ -122,6 +126,10 @@ function Signin() {
                 </div>          
               </form>
             </div>
+            {clock ? 
+              <div class="align-bottom"> 
+              <img class="clock" src={loading} alt="Loading"/></div>: null
+            }
           </section>
         </Modal.Body>
 
